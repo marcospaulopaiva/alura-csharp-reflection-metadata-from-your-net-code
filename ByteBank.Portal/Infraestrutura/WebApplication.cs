@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ByteBank.Portal.Controller;
+using System;
 using System.Net;
 using System.Reflection;
 using System.Text;
@@ -40,44 +41,64 @@ namespace ByteBank.Portal.Infraestrutura
 
             var path = requisicao.Url.AbsolutePath;
 
-            if (path == "/Assets/css/styles.css")
+            if (Utilidades.EhArquivo(path))
             {
-                // Retorna o nosso documento style.css
                 var assembly = Assembly.GetExecutingAssembly();
-                var nomeResource = "ByteBank.Portal.Assets.css.styles.css";
+                var nomeResource = Utilidades.ConverterPathParaNomeAssembly(path);
 
                 var resourceStream = assembly.GetManifestResourceStream(nomeResource);
-                var bytesResource = new byte[resourceStream.Length];
 
-                resourceStream.Read(bytesResource, 0, (int)resourceStream.Length);
+                if (resourceStream == null) 
+                {
+                    resposta.StatusCode = 404;
+                    resposta.OutputStream.Close();  
+                }
+                else
+                {
+                    var bytesResource = new byte[resourceStream.Length];
 
-                resposta.ContentType = "text/css; charset=utf-8";
-                resposta.StatusCode = 200;
-                resposta.ContentLength64 = resourceStream.Length;
+                    resourceStream.Read(bytesResource, 0, (int)resourceStream.Length);
 
-                resposta.OutputStream.Write(bytesResource, 0, bytesResource.Length);
+                    resposta.ContentType = Utilidades.ObterTipoDeConteudo(path);
+                    resposta.StatusCode = 200;
+                    resposta.ContentLength64 = resourceStream.Length;
 
-                resposta.OutputStream.Close();
+                    resposta.OutputStream.Write(bytesResource, 0, bytesResource.Length);
+
+                    resposta.OutputStream.Close();
+
+                }
+
             }
-            else if (path == "/Assets/js/main.js")
+            else if(path == "/Cambio/MXN")
             {
-                // Retorna o nosso documento main.js
-                var assembly = Assembly.GetExecutingAssembly();
-                var nomeResource = "ByteBank.Portal.Assets.js.main.js";
+                var controller = new CambioController();
+                var paginaConteudo = controller.MXN();
 
-                var resourceStream = assembly.GetManifestResourceStream(nomeResource);
-                var bytesResource = new byte[resourceStream.Length];
+                var bufferArquivo = Encoding.UTF8.GetBytes(paginaConteudo);
 
-                resourceStream.Read(bytesResource, 0, (int)resourceStream.Length);
-
-                resposta.ContentType = "application/js; charset=utf-8";
                 resposta.StatusCode = 200;
-                resposta.ContentLength64 = resourceStream.Length;
+                resposta.ContentType = "text/html; charset=utf-8";
+                resposta.ContentLength64 = bufferArquivo.Length;
 
-                resposta.OutputStream.Write(bytesResource, 0, bytesResource.Length);
-
+                resposta.OutputStream.Write(bufferArquivo, 0, bufferArquivo.Length);
                 resposta.OutputStream.Close();
             }
+            else if (path == "/Cambio/USD")
+            {
+                var controller = new CambioController();
+                var paginaConteudo = controller.USD();
+
+                var bufferArquivo = Encoding.UTF8.GetBytes(paginaConteudo);
+
+                resposta.StatusCode = 200;
+                resposta.ContentType = "text/html; charset=utf-8";
+                resposta.ContentLength64 = bufferArquivo.Length;
+
+                resposta.OutputStream.Write(bufferArquivo, 0, bufferArquivo.Length);
+                resposta.OutputStream.Close();
+            }
+
 
             httpListener.Stop();
 

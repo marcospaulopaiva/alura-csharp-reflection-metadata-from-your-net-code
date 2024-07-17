@@ -1,0 +1,6 @@
+C:\Users\marco\source\repos\alura\net\alura-csharp-reflection-metadata-from-your-net-code\ByteBank.Service\bin\Debug\ByteBank.Service.dll
+C:\Users\marco\source\repos\alura\net\alura-csharp-reflection-metadata-from-your-net-code\ByteBank.Service\bin\Debug\ByteBank.Service.pdb
+C:\Users\marco\source\repos\alura\net\alura-csharp-reflection-metadata-from-your-net-code\ByteBank.Service\obj\Debug\ByteBank.Service.csproj.AssemblyReference.cache
+C:\Users\marco\source\repos\alura\net\alura-csharp-reflection-metadata-from-your-net-code\ByteBank.Service\obj\Debug\ByteBank.Service.csproj.CoreCompileInputs.cache
+C:\Users\marco\source\repos\alura\net\alura-csharp-reflection-metadata-from-your-net-code\ByteBank.Service\obj\Debug\ByteBank.Service.dll
+C:\Users\marco\source\repos\alura\net\alura-csharp-reflection-metadata-from-your-net-code\ByteBank.Service\obj\Debug\ByteBank.Service.pdb

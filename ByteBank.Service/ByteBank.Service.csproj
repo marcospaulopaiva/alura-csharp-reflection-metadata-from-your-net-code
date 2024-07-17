@@ -4,17 +4,16 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{3CD39703-7172-43B8-888C-2C1A1553699C}</ProjectGuid>
-    <OutputType>Exe</OutputType>
-    <RootNamespace>ByteBank.Portal</RootNamespace>
-    <AssemblyName>ByteBank.Portal</AssemblyName>
+    <ProjectGuid>{664C0EE3-D9F9-43C1-8C52-CDE83E71DCC8}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ByteBank.Service</RootNamespace>
+    <AssemblyName>ByteBank.Service</AssemblyName>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -24,7 +23,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -43,29 +41,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Controller\CambioController.cs" />
-    <Compile Include="Infraestrutura\Utilidades.cs" />
-    <Compile Include="Infraestrutura\WebApplication.cs" />
-    <Compile Include="Program.cs" />
+    <Compile Include="Cambio\CambioTesteService.cs" />
+    <Compile Include="ICambioService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Assets\css\styles.css" />
-    <EmbeddedResource Include="Assets\js\main.js" />
-    <EmbeddedResource Include="View\Cambio\MXN.html" />
-    <EmbeddedResource Include="View\Cambio\USD.html" />
-    <EmbeddedResource Include="View\Cartoes\Credito.html" />
-    <EmbeddedResource Include="View\Cartoes\Debito.html" />
-    <EmbeddedResource Include="View\Home\Index.html" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\ByteBank.Service\ByteBank.Service.csproj">
-      <Project>{664c0ee3-d9f9-43c1-8c52-cde83e71dcc8}</Project>
-      <Name>ByteBank.Service</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
