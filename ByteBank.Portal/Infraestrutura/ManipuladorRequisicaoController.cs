@@ -1,11 +1,7 @@
 ﻿using ByteBank.Portal.Infraestrutura.Binding;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Reflection;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace ByteBank.Portal.Infraestrutura
 {
@@ -24,10 +20,9 @@ namespace ByteBank.Portal.Infraestrutura
             var controllerWrapper = Activator.CreateInstance("ByteBank.Portal", controllerNomeCompleto, new object[0]);
             var controller = controllerWrapper.Unwrap();
 
-            var methodInfo = controller.GetType().GetMethod(actionNome);
-            //var methodInfo = _actionBinder.ObterMethodInfo(controller, path);
+            var methodInfo = _actionBinder.ObterActionBindInfo(controller, path);
 
-            var resultadoAction = (string) methodInfo.Invoke(controller, new object[0]);
+            var resultadoAction = (string) methodInfo.Invoke(controller);
 
             var buffer = Encoding.UTF8.GetBytes(resultadoAction);
 

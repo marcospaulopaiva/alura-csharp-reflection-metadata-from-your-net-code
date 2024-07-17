@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 
 namespace ByteBank.Portal.Infraestrutura.Binding
 {
     internal class ActionBinder
     {
-        public object ObterMethodInfo(object controller, string path)
+        public ActionBindInfo ObterActionBindInfo(object controller, string path)
         {
             var idxInterrogacao = path.IndexOf('?');
             var existeQueryString = idxInterrogacao >= 0;
@@ -14,7 +16,8 @@ namespace ByteBank.Portal.Infraestrutura.Binding
             {
                 var nomeAction = path.Split(new char[] {'/'}, StringSplitOptions.RemoveEmptyEntries)[1];
                 var methodInfo = controller.GetType().GetMethod(nomeAction);
-                return methodInfo;
+
+                return new ActionBindInfo(methodInfo, Enumerable.Empty<ArgumentoNomeValor>());
             }
             else
             {
@@ -23,6 +26,11 @@ namespace ByteBank.Portal.Infraestrutura.Binding
                 var queryString = path.Substring(idxInterrogacao+1);
 
                 var tuplasNomeValor = ObterArgumentoNomeValor(queryString);
+                var nomeArgumentos = tuplasNomeValor.Select(tupla => tupla.Nome).ToArray();
+
+                var methodInfo = ObterMethodInforAPartirDeNomeEArgumentos(nomeAction, nomeArgumentos, controller);
+
+                return new ActionBindInfo(methodInfo, tuplasNomeValor);
             }
         }
 
@@ -35,6 +43,39 @@ namespace ByteBank.Portal.Infraestrutura.Binding
                 var partesTupla = tupla.Split(new char[] { '=' }, StringSplitOptions.RemoveEmptyEntries);
                 yield return new ArgumentoNomeValor(partesTupla[0], partesTupla[1]);
             }
+        }
+
+        private MethodInfo ObterMethodInforAPartirDeNomeEArgumentos(string nomeAction, string[] argumentos, object controller)
+        {
+            var argumentosCount = argumentos.Length;
+
+            var bindingFlags =
+                BindingFlags.Instance |
+                BindingFlags.Static |
+                BindingFlags.Public |
+                BindingFlags.DeclaredOnly;
+
+            var metodos = controller.GetType().GetMethods(bindingFlags);
+            var sobrecargas = metodos.Where(metodo => metodo.Name == nomeAction);
+
+            foreach (var sobrecarga in sobrecargas)
+            {
+                var parametros = sobrecarga.GetParameters();
+
+                if (argumentosCount != parametros.Length)
+                    continue;
+
+                var match =
+                    parametros.All(
+                        parametro =>
+                            argumentos.Contains(parametro.Name)
+                    );
+
+                if (match)
+                    return sobrecarga;
+            }
+
+            throw new ArgumentException($"A Sobrecarga do método {nomeAction} não foi encontrada!");
         }
     }
 }
